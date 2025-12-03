@@ -143,9 +143,17 @@ function addReportClickHandlers() {
 function initializePopup() {
     // Generate monthly report buttons
     generateMonthlyReportButtons();
-    
+
     // Add click handlers to all report links (including newly created monthly ones)
     addReportClickHandlers();
+
+    // Add dropSync link handler
+    const dropSyncButton = document.getElementById('dropsync-link');
+    if (dropSyncButton) {
+        dropSyncButton.addEventListener('click', () => {
+            chrome.tabs.create({ url: 'https://dropsync.embervista.com' });
+        });
+    }
 }
 
 // Log when popup is loaded
