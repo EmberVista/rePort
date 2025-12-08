@@ -139,6 +139,20 @@ function addReportClickHandlers() {
     });
 }
 
+// Function to add collapsible section handlers
+function addCollapsibleHandlers() {
+    document.querySelectorAll('.section-title').forEach(title => {
+        title.addEventListener('click', () => {
+            // Toggle collapsed class on title and its sibling content
+            title.classList.toggle('collapsed');
+            const content = title.nextElementSibling;
+            if (content && content.classList.contains('section-content')) {
+                content.classList.toggle('collapsed');
+            }
+        });
+    });
+}
+
 // Initialize the popup
 function initializePopup() {
     // Generate monthly report buttons
@@ -146,6 +160,9 @@ function initializePopup() {
 
     // Add click handlers to all report links (including newly created monthly ones)
     addReportClickHandlers();
+
+    // Add collapsible section handlers
+    addCollapsibleHandlers();
 
     // Add dropSync link handler
     const dropSyncButton = document.getElementById('dropsync-link');
