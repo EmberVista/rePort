@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmberVista — Software Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --text-muted: #666666;
+            --accent: #ffffff;
+            --border: #222222;
+            --border-hover: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Subtle Circuitry Background Pattern */
+        .circuit-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+        }
+
+        .circuit-bg svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Circuit trace animations */
+        @keyframes tracePulse {
+            0%, 100% { opacity: 0.02; }
+            50% { opacity: 0.06; }
+        }
+
+        .circuit-trace {
+            animation: tracePulse 8s ease-in-out infinite;
+        }
+
+        .circuit-trace:nth-child(2) { animation-delay: 2s; }
+        .circuit-trace:nth-child(3) { animation-delay: 4s; }
+        .circuit-trace:nth-child(4) { animation-delay: 6s; }
+
+        /* Main Content */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            padding: 40px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo img {
+            height: 48px;
+            width: auto;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 60px 0 40px;
+            text-align: center;
+            position: relative;
+            background: var(--bg-primary);
+        }
+
+        .hero-logo {
+            width: 280px;
+            max-width: 80%;
+            height: auto;
+            margin-bottom: 32px;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* Section Styling */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            margin-bottom: 48px;
+        }
+
+        .section-header h2 {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .section-header .line {
+            width: 48px;
+            height: 1px;
+            background: var(--border-hover);
+        }
+
+        /* Software Grid */
+        .software-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .software-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 32px;
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .software-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--text-muted), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .software-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .software-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-index {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.625rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+        }
+
+        .software-card h3 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+            letter-spacing: 0.05em;
+        }
+
+        .software-card p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            margin-bottom: 24px;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: gap 0.3s ease;
+        }
+
+        .card-link:hover {
+            gap: 12px;
+        }
+
+        .card-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .card-status {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.625rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border: 1px solid var(--border);
+            margin-top: 16px;
+        }
+
+        /* Contact Section */
+        #contact {
+            border-top: 1px solid var(--border);
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+        }
+
+        .contact-info h3 {
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 24px;
+            letter-spacing: 0.05em;
+        }
+
+        .contact-info p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            font-weight: 300;
+            line-height: 1.8;
+            margin-bottom: 32px;
+        }
+
+        .contact-email {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 2px;
+            transition: border-color 0.3s ease;
+        }
+
+        .contact-email:hover {
+            border-color: var(--text-primary);
+        }
+
+        /* Contact Form */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.6875rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 16px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9375rem;
+            font-weight: 300;
+            transition: border-color 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--border-hover);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border: none;
+            padding: 16px 32px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+        }
+
+        .submit-btn:hover {
+            background: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 0;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @media (max-width: 600px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
+
+        .footer-content p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .hero {
+                padding: 80px 0 60px;
+            }
+
+            .software-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .software-card {
+                padding: 24px;
+            }
+
+            section {
+                padding: 60px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Subtle Circuitry Background -->
+    <div class="circuit-bg">
+        <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+            <defs>
+                <pattern id="circuit-pattern" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+                    <!-- Horizontal traces -->
+                    <line x1="0" y1="50" x2="80" y2="50" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <line x1="120" y1="50" x2="200" y2="50" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <line x1="0" y1="150" x2="60" y2="150" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <line x1="140" y1="150" x2="200" y2="150" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    
+                    <!-- Vertical traces -->
+                    <line x1="100" y1="0" x2="100" y2="40" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <line x1="100" y1="60" x2="100" y2="140" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <line x1="100" y1="160" x2="100" y2="200" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    
+                    <!-- Connection nodes -->
+                    <circle cx="80" cy="50" r="2" fill="#fff" class="circuit-trace"/>
+                    <circle cx="120" cy="50" r="2" fill="#fff" class="circuit-trace"/>
+                    <circle cx="100" cy="50" r="3" fill="none" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <circle cx="60" cy="150" r="2" fill="#fff" class="circuit-trace"/>
+                    <circle cx="140" cy="150" r="2" fill="#fff" class="circuit-trace"/>
+                    <circle cx="100" cy="150" r="3" fill="none" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    
+                    <!-- Diagonal traces -->
+                    <line x1="80" y1="50" x2="100" y2="70" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <line x1="120" y1="50" x2="100" y2="70" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    
+                    <!-- IC chip shapes -->
+                    <rect x="90" y="65" width="20" height="10" fill="none" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    
+                    <!-- Via holes -->
+                    <circle cx="40" cy="100" r="1.5" fill="#fff" class="circuit-trace"/>
+                    <circle cx="160" cy="100" r="1.5" fill="#fff" class="circuit-trace"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#circuit-pattern)"/>
+        </svg>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero -->
+        <section class="hero">
+            <img src="assets/logo-full.png" alt="EmberVista" class="hero-logo">
+        </section>
+
+        <!-- Software Section -->
+        <section id="software">
+            <div class="section-header">
+                <h2>Software</h2>
+                <div class="line"></div>
+            </div>
+            
+            <div class="software-grid">
+                <div class="software-card">
+                    <span class="card-index">01</span>
+                    <h3>boxer</h3>
+                    <p>Python webapp that formats Amazon packing sheets for seamless upload to Amazon Seller Central.</p>
+                    <a href="https://boxer.embervista.com" class="card-link" target="_blank">
+                        Launch
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="software-card">
+                    <span class="card-index">02</span>
+                    <h3>dropsync</h3>
+                    <p>Python webapp with Google Apps Script integration. Uploads reports generated by rePort for application to client SEO sheets.</p>
+                    <a href="https://dropsync.embervista.com" class="card-link" target="_blank">
+                        Launch
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="software-card">
+                    <span class="card-index">03</span>
+                    <h3>rePort</h3>
+                    <p>Chrome extension for downloading Amazon reports. Streamlines data extraction for analysis and automation workflows.</p>
+                    <a href="https://report.embervista.com" class="card-link" target="_blank">
+                        Learn More
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="section-header">
+                <h2>Contact</h2>
+                <div class="line"></div>
+            </div>
+
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Get in Touch</h3>
+                    <p>Have a question about our software or interested in collaboration? We'd like to hear from you.</p>
+                    <a href="mailto:inquire@embervista.com" class="contact-email">inquire@embervista.com</a>
+                </div>
+
+                <form class="contact-form" action="https://formsubmit.co/inquire@embervista.com" method="POST">
+                    <input type="hidden" name="_subject" value="New EmberVista Inquiry">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_next" value="https://www.embervista.com">
+                    
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" placeholder="Your name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" placeholder="Your message..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2025 EmberVista. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="mailto:inquire@embervista.com">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

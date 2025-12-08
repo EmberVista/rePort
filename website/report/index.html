@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rePort — Amazon Report Downloader | EmberVista</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --text-muted: #666666;
+            --accent: #ffffff;
+            --border: #222222;
+            --border-hover: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Circuit Background */
+        .circuit-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+        }
+
+        .circuit-bg svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes tracePulse {
+            0%, 100% { opacity: 0.02; }
+            50% { opacity: 0.06; }
+        }
+
+        .circuit-trace {
+            animation: tracePulse 8s ease-in-out infinite;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            padding: 24px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Main Content */
+        main {
+            text-align: center;
+            padding: 120px 0 80px;
+        }
+
+        .product-badge {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.625rem;
+            color: var(--text-muted);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            margin-bottom: 24px;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-bottom: 16px;
+        }
+
+        .description {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            max-width: 500px;
+            margin: 0 auto 48px;
+            line-height: 1.8;
+        }
+
+        /* Download Button */
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            text-decoration: none;
+            padding: 18px 36px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background: var(--text-secondary);
+            gap: 16px;
+        }
+
+        .download-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Features */
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 64px;
+            padding-top: 48px;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 600px) {
+            .features {
+                flex-direction: column;
+                gap: 24px;
+            }
+        }
+
+        .feature {
+            text-align: center;
+        }
+
+        .feature-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.625rem;
+            color: var(--text-muted);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .feature-value {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid var(--border);
+            padding: 24px;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+        }
+
+        footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Circuit Background -->
+    <div class="circuit-bg">
+        <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+            <defs>
+                <pattern id="circuit-pattern" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+                    <line x1="0" y1="50" x2="80" y2="50" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <line x1="120" y1="50" x2="200" y2="50" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <line x1="0" y1="150" x2="60" y2="150" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <line x1="140" y1="150" x2="200" y2="150" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <line x1="100" y1="0" x2="100" y2="40" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <line x1="100" y1="60" x2="100" y2="140" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <line x1="100" y1="160" x2="100" y2="200" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <circle cx="80" cy="50" r="2" fill="#fff" class="circuit-trace"/>
+                    <circle cx="120" cy="50" r="2" fill="#fff" class="circuit-trace"/>
+                    <circle cx="100" cy="50" r="3" fill="none" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <circle cx="60" cy="150" r="2" fill="#fff" class="circuit-trace"/>
+                    <circle cx="140" cy="150" r="2" fill="#fff" class="circuit-trace"/>
+                    <line x1="80" y1="50" x2="100" y2="70" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <line x1="120" y1="50" x2="100" y2="70" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <rect x="90" y="65" width="20" height="10" fill="none" stroke="#fff" stroke-width="0.5" class="circuit-trace"/>
+                    <circle cx="40" cy="100" r="1.5" fill="#fff" class="circuit-trace"/>
+                    <circle cx="160" cy="100" r="1.5" fill="#fff" class="circuit-trace"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#circuit-pattern)"/>
+        </svg>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <a href="https://www.embervista.com" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            EmberVista
+        </a>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <main>
+            <span class="product-badge">Chrome Extension</span>
+            <h1>rePort</h1>
+            <p class="subtitle">Amazon Report Downloader</p>
+            <p class="description">Streamline your workflow with automated Amazon report downloads. Extract the data you need for analysis and automation.</p>
+            
+            <!-- UPDATE THIS LINK to your actual GitHub repo -->
+            <a href="https://github.com/embervista/report" class="download-btn" target="_blank">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                Download on GitHub
+            </a>
+
+            <div class="features">
+                <div class="feature">
+                    <p class="feature-label">Platform</p>
+                    <p class="feature-value">Chrome / Chromium</p>
+                </div>
+                <div class="feature">
+                    <p class="feature-label">License</p>
+                    <p class="feature-value">Internal Use</p>
+                </div>
+                <div class="feature">
+                    <p class="feature-label">Status</p>
+                    <p class="feature-value">Active Development</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 <a href="https://www.embervista.com">EmberVista</a></p>
+    </footer>
+</body>
+</html>
